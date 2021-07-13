@@ -1,0 +1,30 @@
+{
+  "name": "shinyinvoer",
+  "version": "0.1.0",
+  "description": "More input widgets for Shiny",
+  "main": "index.js",
+  "directories": {
+    "man": "man",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datasketch/shinyinvoer.git"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/datasketch/shinyinvoer/issues"
+  },
+  "homepage": "https://github.com/datasketch/shinyinvoer#readme",
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
+  }
+}

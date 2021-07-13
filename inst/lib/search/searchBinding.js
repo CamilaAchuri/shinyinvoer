@@ -1,45 +1,37 @@
-// step i
-var searchBinding = new Shiny.InputBinding();
+const searchBinding = new Shiny.InputBinding();
 
-// step ii
 $.extend(searchBinding, {
-
-  find: function(scope) {
-      return $(scope).find('.input-autosuggest');
+  find(scope) {
+    return $(scope).find('.input-autosuggest');
   },
-
-  initialize: function(el){
-      var data = el.dataset.top;
-      var placeholder = el.dataset.placeholder
-      new Autosuggest(el, JSON.parse(data), placeholder);
+  initialize(el) {
+    const data = el.dataset.top;
+    const { placeholder } = el.dataset;
+    // eslint-disable-next-line no-new
+    new Autosuggest(el, JSON.parse(data), placeholder);
   },
-
-  getValue: function(el) {
-    var input = el.querySelector('input');
-    document.querySelector('.results-list').innerHTML = "";
+  getValue(el) {
+    const input = el.querySelector('input');
+    document.querySelector('.results-list').innerHTML = '';
     return input.value;
   },
-
-  subscribe: function(el, callback) {
-      el.addEventListener('keyup', function(event){
-        var target = event.target;
-        console.log('holiiii', event);
-       if (event.keyCode === 13) {
-         callback();
-       }
-      });
-
-      el.addEventListener('click', function (event) {
-        var target = event.target;
-        if (!target.matches('.results-item')) {
-          return
-        }
-        el.querySelector('input').value = target.textContent;
+  subscribe(el, callback) {
+    el.addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
         callback();
-      });
-  }
+      }
+    });
+
+    el.addEventListener('click', (event) => {
+      const { target } = event;
+      if (!target.matches('.results-item')) {
+        return;
+      }
+      el.querySelector('input').value = target.textContent;
+      callback();
+    });
+  },
 
 });
 
-// step iii
 Shiny.inputBindings.register(searchBinding);

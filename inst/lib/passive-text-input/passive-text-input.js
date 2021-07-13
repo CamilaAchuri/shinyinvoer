@@ -14,23 +14,23 @@ $.extend(passiveTextInputBinding, {
     return input.value.trim();
   },
   subscribe(el, callback) {
-    el.addEventListener('keyup', event => {
+    el.addEventListener('keyup', (event) => {
       if (event.keyCode !== 13) return;
       callback();
     });
 
-    el.addEventListener('click', event => {
+    el.addEventListener('click', (event) => {
       if (!event.target.matches('button')) return;
       callback();
     });
   },
   receiveMessage(el, message) {
-    const input = el.querySelector('input')
+    const input = el.querySelector('input');
     const event = new KeyboardEvent('keyup', {
       keyCode: 13,
     });
 
-    input.value = message.value || ''
+    input.value = message.value || '';
     el.dispatchEvent(event);
   },
 });

@@ -1,0 +1,25 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "rules": {
+        "no-param-reassign": ["error", { "props": false }]
+    },
+    "globals": {
+        "Shiny": "readonly",
+        "$": "readonly",
+        "Sortable": "readonly",
+        "Autosuggest": "writable"
+    },
+    "ignorePatterns": [
+        "inst/lib/spectrumColorPicker/sortable.min.js",
+        "inst/lib/spectrumColorPicker/spectrum.js"
+    ]
+}

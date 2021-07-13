@@ -1,15 +1,15 @@
-let toggleSwitchBinding = new Shiny.InputBinding();
+const toggleSwitchBinding = new Shiny.InputBinding();
 
 $.extend(toggleSwitchBinding, {
-  find: function (scope) {
+  find(scope) {
     return $(scope).find('.switch-container');
   },
-  getValue: function (el) {
+  getValue(el) {
     const input = el.querySelector('input');
     return input.value;
   },
-  subscribe: function (el, callback) {
-    el.addEventListener('change', function() {
+  subscribe(el, callback) {
+    el.addEventListener('change', () => {
       callback();
     });
   },

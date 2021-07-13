@@ -16,20 +16,18 @@ $.extend(chipsInputBinding, {
         chipList.insertBefore(chipEl, chipInput.parentNode);
       });
     } catch (e) {
-      console.log('Something went wrong #initialize');
       chips = [];
     }
   },
   getValue(el) {
-    let chips;
+    let chips = [];
     try {
       chips = JSON.parse(el.dataset.chips);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('Something went wrong #getValue');
-      chips = [];
-    } finally {
-      return chips;
     }
+    return chips;
   },
   subscribe(el, callback) {
     const chipContainer = el.querySelector('.chip-container');
@@ -61,7 +59,7 @@ $.extend(chipsInputBinding, {
       callback();
     });
 
-    chipList.addEventListener('click', function (e) {
+    chipList.addEventListener('click', (e) => {
       let chip;
       if (e.target.matches('button')) {
         chip = e.target.parentNode;
@@ -86,7 +84,7 @@ $.extend(chipsInputBinding, {
       let previousSibling = chip.previousElementSibling;
 
       while (previousSibling) {
-        index++;
+        index += 1;
         previousSibling = previousSibling.previousElementSibling;
       }
 
@@ -121,7 +119,7 @@ $.extend(chipsInputBinding, {
     chipTitle.textContent = title;
 
     chip.appendChild(chipTitle);
-    chip.innerHTML += `<button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>`;
+    chip.innerHTML += '<button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>';
 
     return chip;
   },

@@ -1,12 +1,10 @@
-let dropdownActionBinding = new Shiny.InputBinding();
+const dropdownActionBinding = new Shiny.InputBinding();
 
 function dropdownActionCreateTriggerButton(label) {
   const button = document.createElement('button');
   button.classList.add('dropdown-action-trigger');
   button.textContent = label;
-  button.innerHTML =
-    button.innerHTML +
-    '<svg class="dropdown-action-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.3 9.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z" /></svg>';
+  button.innerHTML += '<svg class="dropdown-action-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.3 9.3a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z" /></svg>';
   return button;
 }
 
@@ -14,23 +12,24 @@ function dropdownActionCreateActionList(choices) {
   const dropdownActionList = document.createElement('div');
   dropdownActionList.classList.add('dropdown-action-list');
 
-  choices.forEach(function (choice) {
-    if (choice.id === "separator" | choice.label === "separator") {
-      var dropdownActionItem = document.createElement('hr');
+  choices.forEach((choice) => {
+    let dropdownActionItem;
+    if (choice.id === 'separator' || choice.label === 'separator') {
+      dropdownActionItem = document.createElement('hr');
       dropdownActionItem.classList.add('dropdown-action-item-separator');
     } else {
-      if (choice.type === "text") {
-        var dropdownActionItem = document.createElement('div');
+      if (choice.type === 'text') {
+        dropdownActionItem = document.createElement('div');
         dropdownActionItem.classList.add('dropdown-action-item');
       } else {
-        var dropdownActionItem = document.createElement('a');
+        dropdownActionItem = document.createElement('a');
         dropdownActionItem.setAttribute('id', choice.id);
-        if (choice.type === "download") {
+        if (choice.type === 'download') {
           dropdownActionItem.setAttribute('target', '_blank');
           dropdownActionItem.classList.add('shiny-download-link', 'dropdown-action-item');
           dropdownActionItem.setAttribute('download', '');
-        } else if (choice.type === "modalShinypanels") {
-          dropdownActionItem.setAttribute('data-modal', 'md-' + choice.id);
+        } else if (choice.type === 'modalShinypanels') {
+          dropdownActionItem.setAttribute('data-modal', `md-${choice.id}`);
           dropdownActionItem.classList.add('modal-trigger', 'dropdown-action-item', 'dropdown-action-item-modal-shinypanels');
         } else {
           dropdownActionItem.setAttribute('href', '#');
@@ -40,46 +39,46 @@ function dropdownActionCreateActionList(choices) {
       dropdownActionItem.setAttribute('title', choice.label);
       dropdownActionItem.dataset.action = choice.id;
       if (choice.image) {
-        var dropdownActionItemImage = document.createElement('img');
+        const dropdownActionItemImage = document.createElement('img');
         dropdownActionItemImage.classList.add('dropdown-action-item-image');
         dropdownActionItemImage.setAttribute('src', choice.image);
         dropdownActionItem.appendChild(dropdownActionItemImage);
       }
-      var dropdownActionItemLabel = document.createElement('span');
+      const dropdownActionItemLabel = document.createElement('span');
       dropdownActionItemLabel.classList.add('dropdown-action-item-label');
       dropdownActionItemLabel.textContent = choice.label;
       dropdownActionItem.appendChild(dropdownActionItemLabel);
     }
     dropdownActionList.appendChild(dropdownActionItem);
-  })
+  });
   return dropdownActionList;
 }
 
 $.extend(dropdownActionBinding, {
-  find: function (scope) {
+  find(scope) {
     return $(scope).find('.dropdown-action-container');
   },
-  initialize: function (el) {
+  initialize(el) {
     const dropdownActionTrigger = dropdownActionCreateTriggerButton(
-      el.dataset.label
+      el.dataset.label,
     );
     const dropdownActionList = dropdownActionCreateActionList(
-      JSON.parse(el.dataset.options)
+      JSON.parse(el.dataset.options),
     );
     el.appendChild(dropdownActionTrigger);
     el.appendChild(dropdownActionList);
   },
-  getValue: function (el) {
+  getValue(el) {
     return el.dataset.selected;
   },
-  subscribe: function (el, callback) {
+  subscribe(el, callback) {
     const dropdownActionIndicator = el.querySelector(
-      '.dropdown-action-indicator'
+      '.dropdown-action-indicator',
     );
     const dropdownActionList = el.querySelector('.dropdown-action-list');
 
-    function dropdownActionToggleClass(el, className) {
-      el.classList.toggle(className, !el.classList.contains(className));
+    function dropdownActionToggleClass(_el, className) {
+      _el.classList.toggle(className, !_el.classList.contains(className));
     }
 
     function dropdownActionToggleStates() {
@@ -87,19 +86,22 @@ $.extend(dropdownActionBinding, {
       dropdownActionToggleClass(dropdownActionIndicator, 'is-open');
     }
 
-    el.addEventListener('click', function (event) {
+    // eslint-disable-next-line consistent-return
+    el.addEventListener('click', (event) => {
       const { target } = event;
       if (
-        target.matches('.dropdown-action-trigger') ||
-        target === dropdownActionIndicator ||
-        target.matches(".dropdown-action-trigger path")
+        target.matches('.dropdown-action-trigger')
+        || target === dropdownActionIndicator
+        || target.matches('.dropdown-action-trigger path')
       ) {
         dropdownActionToggleStates();
         return callback();
       }
 
       if (target.matches('.dropdown-action-item') || target.matches('.dropdown-action-item .dropdown-action-item-image') || target.matches('.dropdown-action-item .dropdown-action-item-label')) {
-        const action = target.dataset.action ? target.dataset.action : target.parentNode.dataset.action;
+        const action = target.dataset.action
+          ? target.dataset.action
+          : target.parentNode.dataset.action;
         el.dataset.selected = action || '';
         dropdownActionToggleStates();
         return callback();

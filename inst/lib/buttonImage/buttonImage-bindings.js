@@ -1,26 +1,26 @@
 const buttonImageBinding = new Shiny.InputBinding();
 // Si siempre hay un boton activo
-let buttonClicked = undefined;
+let buttonClicked;
 
 $.extend(buttonImageBinding, {
-  find: function (scope) {
+  find(scope) {
     return $(scope).find('.buttons-group');
   },
-  getValue: function (el) {
+  getValue() {
     if (!buttonClicked) {
       buttonClicked = document.querySelector('.button-style.active-btn');
     }
     const id = buttonClicked.getAttribute('id');
     return id;
   },
-  setValue: function (button, value) {
+  setValue(button) {
     buttonClicked = button;
     $(button).trigger('click');
   },
-  subscribe: function (el, callback) {
+  subscribe(el, callback) {
     // Enlaza eventos al elemento que se creo
-    $(el).on('click.buttonImageBinding', function (event) {
-      const target = event.target;
+    $(el).on('click.buttonImageBinding', (event) => {
+      const { target } = event;
       if (target.matches('button')) {
         buttonClicked.classList.remove('active-btn');
         buttonClicked = target;
@@ -35,15 +35,15 @@ $.extend(buttonImageBinding, {
       callback();
     });
   },
-  receiveMessage: function (el, data) {
-    let currentlyActive = document.querySelector('.active-btn');
+  receiveMessage(el, data) {
+    const currentlyActive = document.querySelector('.active-btn');
 
     if (data.active === currentlyActive.id) {
       return;
     }
     currentlyActive.classList.remove('active-btn');
 
-    const updatedButton = el.querySelector('#' + data.active);
+    const updatedButton = el.querySelector(`#${data.active}`);
     updatedButton.classList.add('active_btn');
     // update reference
     this.setValue(updatedButton, data.active);

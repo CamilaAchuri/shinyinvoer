@@ -1,61 +1,61 @@
-var output_states = [];
+const outputStates = [];
 
-var escapeSelector = function(s) {
-    return s.replace(/([!"#$%&'()*+,-./:;<=>?@\[\\\]^`{|}~])/g, "\\$1");
-};
+function escapeSelector(s) {
+  return s.replace(/([!"#$%&'()*+,-./:;<=>?@[\\\]^`{|}~])/g, '\\$1');
+}
 
-var show_spinner = function(id) {
-  var selector = "#"+escapeSelector(id);
-  $(selector).siblings(".load-container, .shiny-spinner-placeholder").removeClass('shiny-spinner-hidden');
-  $(selector).siblings(".load-container").siblings('.shiny-bound-output, .shiny-output-error').css('visibility', 'hidden');
-};
+function showSpinner(id) {
+  const selector = `#${escapeSelector(id)}`;
+  $(selector).siblings('.load-container, .shiny-spinner-placeholder').removeClass('shiny-spinner-hidden');
+  $(selector).siblings('.load-container').siblings('.shiny-bound-output, .shiny-output-error').css('visibility', 'hidden');
+}
 
-var hide_spinner = function(id) {
-  var selector = "#"+escapeSelector(id);
-  $(selector).siblings(".load-container, .shiny-spinner-placeholder").addClass('shiny-spinner-hidden');
-  $(selector).siblings(".load-container").siblings('.shiny-bound-output').css('visibility', 'visible');
-};
+function hideSpinner(id) {
+  const selector = `#${escapeSelector(id)}`;
+  $(selector).siblings('.load-container, .shiny-spinner-placeholder').addClass('shiny-spinner-hidden');
+  $(selector).siblings('.load-container').siblings('.shiny-bound-output').css('visibility', 'visible');
+}
 
-var update_spinner = function(id) {
-  if (!(id in output_states)) {
-    show_spinner(id);
+function updateSpinner(id) {
+  if (!(id in outputStates)) {
+    showSpinner(id);
   }
-  if (output_states[id] <= 0) {
-    show_spinner(id);
+  if (outputStates[id] <= 0) {
+    showSpinner(id);
   } else {
-    hide_spinner(id);
+    hideSpinner(id);
   }
-};
+}
 
-$(document).on('shiny:bound', function(event) {
-  var id = event.target.id;
-  if (id === undefined || id === "") {
+$(document).on('shiny:bound', (event) => {
+  const { id } = event.target;
+  if (id === undefined || id === '') {
     return;
   }
 
   /* if not bound before, then set the value to 0 */
-  if (!(id in output_states)) {
-    output_states[id] = 0;
+  if (!(id in outputStates)) {
+    outputStates[id] = 0;
   }
-  update_spinner(id);
+  updateSpinner(id);
 });
 
 /* When recalculating starts, show the spinner container & hide the output */
-$(document).on('shiny:outputinvalidated', function(event) {
-  var id = event.target.id;
+$(document).on('shiny:outputinvalidated', (event) => {
+  const { id } = event.target;
   if (id === undefined) {
     return;
   }
-  output_states[id] = 0;
-  update_spinner(id);
+  outputStates[id] = 0;
+  updateSpinner(id);
 });
 
 /* When new value or error comes in, hide spinner container (if any) & show the output */
-$(document).on('shiny:value shiny:error', function(event) {
-  var id = event.target.id;
+$(document).on('shiny:value shiny:error', (event) => {
+  const { id } = event.target;
   if (id === undefined) {
     return;
   }
-  output_states[id] = 1;
-  update_spinner(id);
+  outputStates[id] = 1;
+  updateSpinner(id);
 });
